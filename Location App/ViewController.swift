@@ -12,7 +12,7 @@ import CoreLocation
 class ViewController: UIViewController, CLLocationManagerDelegate{
 
     let locationManager = CLLocationManager()
-    var lastLocationUpdate:NSDate?
+    var lastLocationUpdate:Date?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +24,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
             
             locationManager.startUpdatingLocation()
-            // TODO: Update lastLocationUpdate and stop updating location
+            lastLocationUpdate = Date()
+            locationManager.stopUpdatingLocation()
         }
     }
     
