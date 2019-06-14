@@ -12,6 +12,7 @@ import CoreLocation
 class ViewController: UIViewController, CLLocationManagerDelegate{
 
     let locationManager = CLLocationManager()
+    var lastLocationUpdate:NSDate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +22,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            
             locationManager.startUpdatingLocation()
+            // TODO: Update lastLocationUpdate and stop updating location
         }
     }
     
@@ -29,6 +32,28 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         if let location = locations.first {
             print(location.coordinate)
         }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == CLAuthorizationStatus.denied  {
+            showLocationDisabledPopup()
+        }
+    }
+    
+    func showLocationDisabledPopup() {
+        let alert = UIAlertController(title: "Location Use Disabled", message: "Please Allow Location Use", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        
+        let openAction = UIAlertAction(title: "Open Settings", style: .default) { (action) in
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
+        alert.addAction(openAction)
+        
+        present(alert, animated: true, completion: nil)
     }
 
 
