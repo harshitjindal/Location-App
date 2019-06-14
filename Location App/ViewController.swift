@@ -16,7 +16,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     var lastLocationUpdate:Date?
     var lastLocation:CLLocation?
     var consecutiveLocationDistance:Double?
-    var stays:[CLLocationCoordinate2D]?
+    var stays = [CLLocationCoordinate2D]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +27,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
             
-            let locationTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true) { (Timer) in
+            let locationTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { (Timer) in
                 self.locationManager.startUpdatingLocation()
                 print("Timer Fired!")
             }
@@ -39,10 +39,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         if let currentLocation = locations.first {
             if lastLocation != nil {
                 consecutiveLocationDistance = currentLocation.distance(from: lastLocation!)
-                if consecutiveLocationDistance! <= 100 {
-                    stays?.append(currentLocation.coordinate)
+                if consecutiveLocationDistance! <= 10 {
+                    stays.append(currentLocation.coordinate)
+                    print("-=-=-==-=--",stays)
                     print("Stay Detected at \(currentLocation.coordinate)")
-                    print("Number of Stays: \(stays?.count ?? 0)")
+                    print("Number of Stays: \(stays.count ?? 0)")
                 } else {
                     print("Target is moving!")
                 }
